@@ -27,7 +27,7 @@ public class MKSmartContext: MKContext, ObservableObject {
     
     public func draw(from fromPoint: CGPoint,
                               to toPoint: CGPoint,
-                              touchState: MKState = MKState(),
+                              touchState: MKDrawingState = MKDrawingState(),
                               brush: Brush = Brush()) {
         var object = objects[safe: currentObjectIndex ?? 0]
         

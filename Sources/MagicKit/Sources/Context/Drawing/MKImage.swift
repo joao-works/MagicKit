@@ -15,7 +15,7 @@ public class MKImage: NSImage, Identifiable, ObservableObject {
     /// The draw method draws strokes to the image through point, state and brush parameters
     public func draw(from fromPoint: CGPoint,
                      to toPoint: CGPoint,
-                     touchState: MKState = MKState(),
+                     touchState: MKDrawingState = MKDrawingState(),
                      brush: Brush = Brush()) {
         self.lockFocus()
         

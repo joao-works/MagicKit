@@ -39,22 +39,11 @@ public struct Brush: Equatable {
         self.opacity = opacity
     }
     
-    public init(_ codableBrush: CodableBrush) {
-        color = codableBrush.color
-        gradient = codableBrush.gradient ?? gradient
-        type = codableBrush.type ?? type
-        fillStyle = codableBrush.fillStyle ?? fillStyle
-        size = codableBrush.size
-        sizeVariation = codableBrush.sizeVariation
-        sizeVariationEnabled = codableBrush.sizeVariationEnabled ?? sizeVariationEnabled
-        opacity = codableBrush.opacity
-    }
-    
     public func variableSize(pressure: Float) -> CGFloat {
         size+(sizeVariationEnabled ? sizeVariation*CGFloat(pressure) : 0)
     }
     
-    public func color(for touchState: MKState) -> Color {
+    public func color(for touchState: MKDrawingState) -> Color {
         switch fillStyle {
         case .color: return color.color
         case .gradient: return gradient.point(at: touchState.progress)
@@ -64,30 +53,4 @@ public struct Brush: Equatable {
     public mutating func toggleType() {
         type = type == .pencil ? .eraser : .pencil
     }
-}
-
-public struct CodableBrush: Codable {
-    public init(_ brush: Brush) {
-        color = brush.color
-        gradient = brush.gradient
-        type = brush.type
-        fillStyle = brush.fillStyle
-        size = brush.size
-        sizeVariation = brush.sizeVariation
-        sizeVariationEnabled = brush.sizeVariationEnabled
-        opacity = brush.opacity
-    }
-    
-    var color: BrushColor
-    var gradient: BrushGradient?
-    
-    var type: BrushTypes?
-    var fillStyle: BrushFillStyles?
-    
-    var size: CGFloat
-    
-    var sizeVariation: CGFloat
-    var sizeVariationEnabled: Bool?
-    
-    var opacity: CGFloat
 }

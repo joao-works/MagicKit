@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct MKState {
+public struct MKDrawingState {
     public init(position: CGPoint = CGPoint(),
                 pressure: Float = 0,
                 stage: Int = 0,

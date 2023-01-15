@@ -44,7 +44,7 @@ public class MKRasterContext: MKContext {
     
     public func draw(from fromPoint: CGPoint,
                      to toPoint: CGPoint,
-                     touchState: MKState = MKState(),
+                     touchState: MKDrawingState = MKDrawingState(),
                      brush: Brush = Brush()) {
         temp.draw(from: fromPoint, to: toPoint, touchState: touchState, brush: brush)
         triggerTemp()
