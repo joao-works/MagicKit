@@ -7,23 +7,23 @@
 
 import SwiftUI
 
-/// The configuration struct that styles strokes
-public struct Brush: Equatable {
-    public var color: BrushColor = BrushColor(color: .purple)
-    public var gradient: BrushGradient = BrushGradient(colors: [])
+/// The configuration struct that styles brush strokes
+public struct MKBrush: Equatable {
+    public var color: MKColor
+    public var gradient: MKGradient
     
-    public var type: BrushTypes = .pencil
-    public var fillStyle: BrushFillStyles = .gradient
+    public var type: BrushTypes
+    public var fillStyle: BrushFillStyles
     
-    public var size: CGFloat = 10.0
+    public var size: CGFloat
     
-    public var sizeVariation: CGFloat = 10.0
-    public var sizeVariationEnabled: Bool = true
+    public var sizeVariation: CGFloat
+    public var sizeVariationEnabled: Bool
     
-    public var opacity: CGFloat = 1.0
+    public var opacity: CGFloat
     
-    public init(color: BrushColor = BrushColor(color: .purple),
-                gradient: BrushGradient = BrushGradient(colors: []),
+    public init(color: MKColor = MKColor(color: .purple),
+                gradient: MKGradient = MKGradient(colors: [MKColor(color: .purple), MKColor(color: .pink)]),
                 type: BrushTypes = .pencil,
                 fillStyle: BrushFillStyles = .color,
                 size: CGFloat = 10.0, sizeVariation: CGFloat = 10.0,

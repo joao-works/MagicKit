@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-public struct BrushGradient: Codable, Hashable, Identifiable {
+public struct MKGradient: Codable, Hashable, Identifiable {
     public var id = UUID()
     
-    public init(name: String = "brush-style-gradient".localized(), stops: [BrushGradient.Stop], scale: CGFloat = 500, autoReverse: Bool = true) {
+    public init(name: String = "brush-style-gradient".localized(), stops: [MKGradient.Stop], scale: CGFloat = 500, autoReverse: Bool = true) {
         self.name = name
         self.stops = stops
         self.scale = scale
@@ -33,12 +33,12 @@ public struct BrushGradient: Codable, Hashable, Identifiable {
     public struct Stop: Codable, Hashable, Identifiable {
         public var id = UUID()
         
-        public init(color: BrushColor, location: CGFloat) {
+        public init(color: MKColor, location: CGFloat) {
             self.color = color
             self.location = location
         }
         
-        public var color: BrushColor
+        public var color: MKColor
         public var location: CGFloat
     }
     
@@ -60,7 +60,7 @@ public struct BrushGradient: Codable, Hashable, Identifiable {
         return end?.color.color ?? .black
     }
     
-    public func copy(name: String? = nil) -> BrushGradient {
+    public func copy(name: String? = nil) -> MKGradient {
         var copy = self
         copy.id = UUID()
         if let name = name {
@@ -70,8 +70,8 @@ public struct BrushGradient: Codable, Hashable, Identifiable {
     }
 }
 
-extension BrushGradient {
-    public init(name: String = "brush-style-gradient".localized(), colors: [BrushColor]) {
+extension MKGradient {
+    public init(name: String = "brush-style-gradient".localized(), colors: [MKColor]) {
         self.init(name: name, stops: colors.enumerated().map( { Stop(color: $1, location: CGFloat($0)/CGFloat(colors.count-1)) } ))
     }
 }

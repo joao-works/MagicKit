@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-public struct BrushColor: Codable, Equatable, Hashable, Identifiable {
+/// A struct that stores a named color
+public struct MKColor: Codable, Equatable, Hashable, Identifiable {
     public var id: String {
         self.name
     }

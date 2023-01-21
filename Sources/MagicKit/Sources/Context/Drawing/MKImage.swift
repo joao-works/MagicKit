@@ -16,7 +16,7 @@ public class MKImage: NSImage, Identifiable, ObservableObject {
     public func draw(from fromPoint: CGPoint,
                      to toPoint: CGPoint,
                      touchState: MKDrawingState = MKDrawingState(),
-                     brush: Brush = Brush()) {
+                     brush: MKBrush = MKBrush()) {
         self.lockFocus()
         
         let scale = CGAffineTransform(scaleX: size.width, y: size.height)
@@ -40,7 +40,7 @@ public class MKImage: NSImage, Identifiable, ObservableObject {
         self.unlockFocus()
     }
     
-    public func merge(with image: NSImage, brush: Brush) {
+    public func merge(with image: NSImage, brush: MKBrush) {
         self.lockFocus()
         stack(image, operation: brush.type == .pencil ? .sourceOver : .destinationOut, opacity: brush.opacity)
         self.unlockFocus()

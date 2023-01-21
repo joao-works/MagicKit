@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public class MKRasterContext: MKContext {
+open class MKRasterContext: MKContext {
     public static func == (lhs: MKRasterContext, rhs: MKRasterContext) -> Bool {
         lhs.id == rhs.id
     }
@@ -45,12 +45,12 @@ public class MKRasterContext: MKContext {
     public func draw(from fromPoint: CGPoint,
                      to toPoint: CGPoint,
                      touchState: MKDrawingState = MKDrawingState(),
-                     brush: Brush = Brush()) {
+                     brush: MKBrush = MKBrush()) {
         temp.draw(from: fromPoint, to: toPoint, touchState: touchState, brush: brush)
         triggerTemp()
     }
     
-    public func commit(brush: Brush = Brush()) {
+    public func commit(brush: MKBrush = MKBrush()) {
         print("COMMIT")
         image.merge(with: temp, brush: brush)
         temp.clear()
@@ -58,7 +58,7 @@ public class MKRasterContext: MKContext {
         triggerTemp()
     }
     
-    public func merge(with context: MKRasterContext, brush: Brush) {
+    public func merge(with context: MKRasterContext, brush: MKBrush) {
         image.merge(with: context.image, brush: brush)
         trigger()
     }

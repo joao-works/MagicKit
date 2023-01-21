@@ -28,7 +28,7 @@ public class MKSmartContext: MKContext, ObservableObject {
     public func draw(from fromPoint: CGPoint,
                               to toPoint: CGPoint,
                               touchState: MKDrawingState = MKDrawingState(),
-                              brush: Brush = Brush()) {
+                              brush: MKBrush = MKBrush()) {
         var object = objects[safe: currentObjectIndex ?? 0]
         
         if object == nil {
@@ -55,11 +55,11 @@ public class MKSmartContext: MKContext, ObservableObject {
         
     }
     
-    public func commit(brush: Brush) {
+    public func commit(brush: MKBrush) {
         
     }
     
-    public func merge(with context: MKSmartContext, brush: Brush) {
+    public func merge(with context: MKSmartContext, brush: MKBrush) {
         
     }
     
@@ -116,7 +116,7 @@ public struct MKStrokeContent: MKObjectContent {
 //        }
 //    }
     
-    public var brush: Brush = Brush()
+    public var brush: MKBrush = MKBrush()
     public var strokes: [MKStroke] = []
     
     public func strokesInRect(rect: CGRect) -> [MKStroke] {
