@@ -1,12 +1,14 @@
 //
-//  DrawingImage.swift
-//  DrawingImage
+//  MKImage.swift
+//  MKImage
 //
 //  Created by João Gabriel Pozzobon dos Santos on 09/08/21.
 //
 
-import AppKit
 import Combine
+
+#if os(macOS)
+import AppKit
 
 /// The core element of a drawing canvas
 public class MKImage: NSImage, Identifiable, ObservableObject {
@@ -56,3 +58,42 @@ public class MKImage: NSImage, Identifiable, ObservableObject {
         self.unlockFocus()
     }
 }
+#elseif os(iOS)
+
+import UIKit
+
+public class MKImage: UIImage, Identifiable, ObservableObject {
+    public let id = UUID()
+    
+    convenience init(size: CGSize, filledWithColor color: UIColor = UIColor.clear, scale: CGFloat = 0.0, opaque: Bool = false) {
+        let rect = CGRectMake(0, 0, size.width, size.height)
+        
+        UIGraphicsBeginImageContextWithOptions(size, opaque, scale)
+        color.set()
+        UIRectFill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        self.init(cgImage: image!.cgImage!)
+    }
+    
+    
+    /// The draw method draws strokes to the image through point, state and brush parameters
+    public func draw(from fromPoint: CGPoint,
+                     to toPoint: CGPoint,
+                     touchState: MKDrawingState = MKDrawingState(),
+                     brush: MKBrush = MKBrush()) {
+    }
+    
+    public func merge(with image: UIImage, brush: MKBrush) {
+    }
+    
+//    public func stack(_ image: NSImage, operation: NSCompositingOperation = .sourceOver, opacity: CGFloat = 1.0) {
+//        image.draw(in: image.alignmentRect, from: image.alignmentRect, operation: operation, fraction: opacity)
+//    }
+    
+    public func clear() {
+    }
+}
+
+#endif

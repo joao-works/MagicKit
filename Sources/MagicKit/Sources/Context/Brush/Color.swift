@@ -27,7 +27,7 @@ fileprivate extension Color {
         SystemColor(self).usingColorSpace(.deviceRGB)?
             .getRed(&r, green: &g, blue: &b, alpha: &a)
         #else
-        guard SystemColor(self).usingColorSpace(.deviceRGB)?
+        guard SystemColor(self)
             .getRed(&r, green: &g, blue: &b, alpha: &a) else {
             // Pay attention that the color should be convertible into RGB format
             // Colors using hue, saturation and brightness won't work
