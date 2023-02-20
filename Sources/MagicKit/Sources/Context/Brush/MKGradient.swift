@@ -27,7 +27,7 @@ public struct MKGradient: Codable, Hashable, Identifiable {
     }
     
     public var gradient: Gradient {
-        Gradient(stops: sortedStops.map( { Gradient.Stop(color: $0.color.color, location: $0.location)} ))
+        Gradient(stops: sortedStops.map( { Gradient.Stop(color: $0.color.nativeColor, location: $0.location)} ))
     }
     
     public struct Stop: Codable, Hashable, Identifiable {
@@ -52,12 +52,12 @@ public struct MKGradient: Codable, Hashable, Identifiable {
         if let start = start {
             if let end = end {
                 let fractionInRange = (fraction-start.location)/(end.location-start.location)
-                return start.color.color.interpolate(to: end.color.color, fraction: fractionInRange)
+                return start.color.nativeColor.interpolate(to: end.color.nativeColor, fraction: fractionInRange)
             }
-            return start.color.color
+            return start.color.nativeColor
         }
         
-        return end?.color.color ?? .black
+        return end?.color.nativeColor ?? .black
     }
     
     public func copy(name: String? = nil) -> MKGradient {

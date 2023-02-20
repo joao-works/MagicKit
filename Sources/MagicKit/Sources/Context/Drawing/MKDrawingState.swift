@@ -25,4 +25,6 @@ public struct MKDrawingState {
     public var stage = 0
     public var swiped = false
     public var progress: CGFloat = 0.0
+    
+    public var view: TouchReader? = nil
 }

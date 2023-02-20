@@ -13,7 +13,9 @@ public class MKSmartContext: MKContext, ObservableObject {
     }
     
     public var id = UUID()
-    static public var type: MKContextType = .smart
+    public var type: MKContextType {
+        .smart
+    }
     
     var currentObjectIndex: Int? = nil
     
@@ -43,8 +45,6 @@ public class MKSmartContext: MKContext, ObservableObject {
         content.strokes.append(MKStroke(points: [fromPoint, toPoint],
                                         progress: touchState.progress,
                                         pressure: CGFloat(touchState.pressure)))
-        
-        print(content.strokes.count)
         
         object?.content = content
         

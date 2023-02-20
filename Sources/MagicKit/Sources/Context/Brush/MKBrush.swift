@@ -45,7 +45,7 @@ public struct MKBrush: Equatable {
     
     public func color(for touchState: MKDrawingState) -> Color {
         switch fillStyle {
-        case .color: return color.color
+        case .color: return color.nativeColor
         case .gradient: return gradient.point(at: touchState.progress)
         }
     }

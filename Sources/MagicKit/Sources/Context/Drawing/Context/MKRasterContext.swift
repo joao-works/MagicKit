@@ -30,7 +30,9 @@ open class MKRasterContext: MKContext {
     @Published public var id = UUID()
     @Published public var tempID = UUID()
     
-    static public var type: MKContextType = .raster
+    open var type: MKContextType {
+        .raster
+    }
     
     public var size: CGSize {
         image.size
@@ -51,7 +53,6 @@ open class MKRasterContext: MKContext {
     }
     
     public func commit(brush: MKBrush = MKBrush()) {
-        print("COMMIT")
         image.merge(with: temp, brush: brush)
         temp.clear()
         trigger()

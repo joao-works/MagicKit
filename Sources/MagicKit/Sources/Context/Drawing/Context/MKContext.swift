@@ -10,7 +10,7 @@ import Foundation
 public protocol MKContext: Identifiable, Equatable, ObservableObject, NSCopying {
     var id: UUID { get set }
     var size: CGSize { get }
-    // static var type: MKContextType { get }
+    var type: MKContextType { get }
     
     func draw(from fromPoint: CGPoint,
                        to toPoint: CGPoint,
@@ -21,7 +21,8 @@ public protocol MKContext: Identifiable, Equatable, ObservableObject, NSCopying 
     func merge(with context: Self, brush: MKBrush)
 }
 
-public enum MKContextType: Int {
+public enum MKContextType: Int, Codable {
     case raster = 0
     case smart = 1
+    case generated = 2
 }

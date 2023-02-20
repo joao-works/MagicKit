@@ -15,11 +15,11 @@ public struct MKColor: Codable, Equatable, Hashable, Identifiable {
     
     public init(name: String = "brush-style-color".localized(), color: Color) {
         self.name = name
-        self.color = color
+        self.nativeColor = color
     }
     
     public var name: String
-    public var color: Color
+    public var nativeColor: Color
     
     public static func ==(lhs: Self, rhs: Self) -> Bool {
         return lhs.id == rhs.id

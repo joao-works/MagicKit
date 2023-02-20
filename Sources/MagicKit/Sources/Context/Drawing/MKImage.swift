@@ -21,11 +21,11 @@ public class MKImage: NSImage, Identifiable, ObservableObject {
                      brush: MKBrush = MKBrush()) {
         self.lockFocus()
         
-        let scale = CGAffineTransform(scaleX: size.width, y: size.height)
+        let transform = CGAffineTransform(translationX: 0, y: size.height)
         
         let path = NSBezierPath()
-        path.move(to: fromPoint.applying(scale))
-        path.line(to: toPoint.applying(scale))
+        path.move(to: fromPoint.applying(transform))
+        path.line(to: toPoint.applying(transform))
         
         path.lineCapStyle = .round
         path.lineJoinStyle = .round
