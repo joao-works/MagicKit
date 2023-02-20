@@ -1,5 +1,5 @@
 //
-//  BrushColor.swift
+//  MKColor.swift
 //  Magic
 //
 //  Created by João Gabriel Pozzobon dos Santos on 22/11/21.

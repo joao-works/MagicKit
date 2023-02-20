@@ -1,5 +1,5 @@
 //
-//  Brush.swift
+//  MKBrush.swift
 //  Magic
 //
 //  Created by João Gabriel Pozzobon dos Santos on 22/11/21.
@@ -12,8 +12,8 @@ public struct MKBrush: Equatable {
     public var color: MKColor
     public var gradient: MKGradient
     
-    public var type: BrushTypes
-    public var fillStyle: BrushFillStyles
+    public var type: MKBrushTypes
+    public var fillStyle: MKBrushFillStyles
     
     public var size: CGFloat
     
@@ -24,8 +24,8 @@ public struct MKBrush: Equatable {
     
     public init(color: MKColor = MKColor(color: .purple),
                 gradient: MKGradient = MKGradient(colors: [MKColor(color: .purple), MKColor(color: .pink)]),
-                type: BrushTypes = .pencil,
-                fillStyle: BrushFillStyles = .color,
+                type: MKBrushTypes = .pencil,
+                fillStyle: MKBrushFillStyles = .color,
                 size: CGFloat = 10.0, sizeVariation: CGFloat = 10.0,
                 sizeVariationEnabled: Bool = true,
                 opacity: CGFloat = 1.0) {

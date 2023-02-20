@@ -1,5 +1,5 @@
 //
-//  BrushGradient.swift
+//  MKGradient.swift
 //  Magic
 //
 //  Created by João Gabriel Pozzobon dos Santos on 23/11/21.
