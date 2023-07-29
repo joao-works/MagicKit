@@ -40,13 +40,13 @@ public struct MKBrush: Equatable {
     }
     
     public func variableSize(pressure: Float) -> CGFloat {
-        size+(sizeVariationEnabled ? sizeVariation*CGFloat(pressure) : 0)
+        size*1.5+(sizeVariationEnabled ? sizeVariation*1.5*CGFloat(pressure) : 0)
     }
     
     public func color(for touchState: MKDrawingState) -> Color {
         switch fillStyle {
         case .color: return color.nativeColor
-        case .gradient: return gradient.point(at: touchState.progress)
+        case .gradient: return gradient.color(at: touchState.progress)
         }
     }
     

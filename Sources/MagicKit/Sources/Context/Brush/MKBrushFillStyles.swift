@@ -15,16 +15,6 @@ public enum MKBrushFillStyles: String, Codable {
         }
     }
     
-    public func bool(_ current: Binding<Self>) -> Binding<Bool> {
-        .init(get: {
-            return current.wrappedValue == self
-        }, set: { value in
-            if value {
-                current.wrappedValue = self
-            }
-        })
-    }
-    
     case color = "color"
     case gradient = "gradient"
 }

@@ -15,10 +15,16 @@ public protocol MKContext: Identifiable, Equatable, ObservableObject, NSCopying 
     func draw(from fromPoint: CGPoint,
                        to toPoint: CGPoint,
                        touchState: MKDrawingState,
-                       brush: MKBrush)
-    func commit(brush: MKBrush)
+                       brush: MKBrush,
+                        local: Bool)
+    func commit(brush: MKBrush,
+                in rect: CGRect)
     func clear()
-    func merge(with context: Self, brush: MKBrush)
+    func merge(with context: Self,
+               brush: MKBrush,
+               in rect: CGRect)
+    
+    func clone() -> any MKContext
 }
 
 public enum MKContextType: Int, Codable {

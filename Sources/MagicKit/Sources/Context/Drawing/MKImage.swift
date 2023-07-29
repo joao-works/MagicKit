@@ -42,14 +42,33 @@ public class MKImage: NSImage, Identifiable, ObservableObject {
         self.unlockFocus()
     }
     
-    public func merge(with image: NSImage, brush: MKBrush) {
+    public func merge(with image: NSImage,
+                      brush: MKBrush,
+                      in rect: CGRect? = nil) {
         self.lockFocus()
-        stack(image, operation: brush.type == .pencil ? .sourceOver : .destinationOut, opacity: brush.opacity)
+        stack(image,
+              in: rect,
+              operation: brush.type == .pencil ? .sourceOver : .destinationOut,
+              opacity: brush.opacity)
         self.unlockFocus()
     }
     
-    public func stack(_ image: NSImage, operation: NSCompositingOperation = .sourceOver, opacity: CGFloat = 1.0) {
-        image.draw(in: image.alignmentRect, from: image.alignmentRect, operation: operation, fraction: opacity)
+    public func stack(_ image: NSImage,
+                      in rect: CGRect? = nil,
+                      operation: NSCompositingOperation = .sourceOver,
+                      opacity: CGFloat = 1.0) {
+        var newRect = image.alignmentRect
+        if let rect {
+            newRect = .init(x: rect.minX-rect.width/2.0,
+                            y: self.size.height-rect.minY-rect.height/2,
+                            width: rect.width,
+                            height: rect.height)
+        }
+        
+        image.draw(in: newRect,
+                   from: image.alignmentRect,
+                   operation: operation,
+                   fraction: opacity)
     }
     
     public func clear() {
@@ -65,7 +84,14 @@ import UIKit
 public class MKImage: UIImage, Identifiable, ObservableObject {
     public let id = UUID()
     
-    convenience init(size: CGSize, filledWithColor color: UIColor = UIColor.clear, scale: CGFloat = 0.0, opaque: Bool = false) {
+    public convenience init(cgImage: CGImage, size: CGSize) {
+        self.init(cgImage: cgImage)
+    }
+    
+    public convenience init(size: CGSize,
+                     filledWithColor color: UIColor = UIColor.clear,
+                     scale: CGFloat = 0.0,
+                     opaque: Bool = false) {
         let rect = CGRectMake(0, 0, size.width, size.height)
         
         UIGraphicsBeginImageContextWithOptions(size, opaque, scale)
@@ -85,7 +111,8 @@ public class MKImage: UIImage, Identifiable, ObservableObject {
                      brush: MKBrush = MKBrush()) {
     }
     
-    public func merge(with image: UIImage, brush: MKBrush) {
+    public func merge(with image: UIImage, brush: MKBrush, in rect: CGRect? = nil) {
+        
     }
     
 //    public func stack(_ image: NSImage, operation: NSCompositingOperation = .sourceOver, opacity: CGFloat = 1.0) {
