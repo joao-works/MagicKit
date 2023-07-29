@@ -1,5 +1,5 @@
 <h1> MagicKit
-  <img align="right" alt="Project logo" src="https://github.com/joao-works/MagicKit/assets/41346220/ed200963-fb66-459e-8bcc-98e099ef6e0c" width=74px>
+  <img align="right" alt="Project logo" src="https://github.com/joao-works/MagicKit/assets/41346220/1e53fe47-b585-4156-84ca-207d2b160335" width=74px>
 </h1>
 
 <p>
