@@ -5,6 +5,7 @@
 <p>
     <img src="https://img.shields.io/badge/iOS-14.0+-blue.svg" />
     <img src="https://img.shields.io/badge/macOS-11.0+-orange.svg" />
+    <img src="https://img.shields.io/badge/Download Magic-7D28DF.svg" />
     <a href="https://twitter.com/joogps">
         <img src="https://img.shields.io/badge/Contact-@joogps-lightgrey.svg?style=social&logo=twitter" alt="Twitter: @joogps" />
     </a>
