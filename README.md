@@ -11,8 +11,7 @@
     </a>
 </p>
 
-MagicKit is an open-sourced bit of [Magic for Mac](https://apps.apple.com/us/app/magic-drawing-and-ai/id1581223559) that exposes some of the things used in the app. It's currently a work in progress, as the main goal for it in the future is turning it into an easy way to integrate drawing methods in your app for both Mac and iOS.
-
+MagicKit is an open-source library that exposes some of [Magic for Mac's](https://apps.apple.com/us/app/magic-drawing-and-ai/id1581223559) codebase. It's currently a work in progress, as the main goal for it in the future is turning it into an easy way to integrate drawing methods in your app for both Mac and iOS.
 
 ## Installation
 
