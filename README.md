@@ -10,4 +10,9 @@
     </a>
 </p>
 
-MagicKit is a Swift framework that allows you to implement vector and raster-based drawing systems to your app with ease.
+MagicKit is an open-sourced bit of [Magic for Mac](https://apps.apple.com/us/app/magic-drawing-and-ai/id1581223559) that exposes some of the things used in the app. It's currently a work in progress, as the main goal for it in the future is turning it into an easy way to integrate drawing methods in your app for both Mac and iOS.
+
+
+## Installation
+
+MagicKit can be installed via the Swift Package Manager, directly on Xcode.
