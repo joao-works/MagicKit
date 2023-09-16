@@ -6,6 +6,7 @@
 //
 
 import Combine
+import SwiftUI
 
 #if os(macOS)
 import AppKit
@@ -17,11 +18,11 @@ public class MKImage: NSImage, Identifiable, ObservableObject {
     /// The draw method draws strokes to the image through point, state and brush parameters
     public func draw(from fromPoint: CGPoint,
                      to toPoint: CGPoint,
-                     touchState: MKDrawingState = MKDrawingState(),
-                     brush: MKBrush = MKBrush()) {
+                     size: CGFloat,
+                     color: Color) {
         self.lockFocus()
         
-        let transform = CGAffineTransform(translationX: 0, y: size.height)
+        let transform = CGAffineTransform(translationX: 0, y: self.size.height)
         
         let path = NSBezierPath()
         path.move(to: fromPoint.applying(transform))
@@ -29,13 +30,9 @@ public class MKImage: NSImage, Identifiable, ObservableObject {
         
         path.lineCapStyle = .round
         path.lineJoinStyle = .round
-        path.lineWidth = brush.variableSize(pressure: touchState.pressure)
+        path.lineWidth = size
         
-        if brush.type == .pencil {
-            NSColor(brush.color(for: touchState)).setStroke()
-        } else {
-            NSColor(.black).setStroke()
-        }
+        NSColor(color).setStroke()
         
         path.stroke()
         
@@ -89,13 +86,13 @@ public class MKImage: UIImage, Identifiable, ObservableObject {
     }
     
     public convenience init(size: CGSize,
-                     filledWithColor color: UIColor = UIColor.clear,
+                     filledWithColor resolveColor: UIColor = UIColor.clear,
                      scale: CGFloat = 0.0,
                      opaque: Bool = false) {
         let rect = CGRectMake(0, 0, size.width, size.height)
         
         UIGraphicsBeginImageContextWithOptions(size, opaque, scale)
-        color.set()
+        resolveColor.set()
         UIRectFill(rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

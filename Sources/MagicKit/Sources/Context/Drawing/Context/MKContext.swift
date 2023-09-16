@@ -15,8 +15,7 @@ public protocol MKContext: Identifiable, Equatable, ObservableObject, NSCopying 
     func draw(from fromPoint: CGPoint,
                        to toPoint: CGPoint,
                        touchState: MKDrawingState,
-                       brush: MKBrush,
-                        local: Bool)
+                       brush: MKBrush)
     func commit(brush: MKBrush,
                 in rect: CGRect)
     func clear()

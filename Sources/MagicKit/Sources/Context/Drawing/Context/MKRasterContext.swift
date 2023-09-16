@@ -19,23 +19,28 @@ open class MKRasterContext: MKContext {
     public init(image: MKImage) {
         self.image = image
         self.temp = MKImage(size: image.size)
-        self.localTemp = MKImage(size: Trackpad.size)
     }
     
     public init(size: CGSize) {
         self.image = MKImage(size: size)
         self.temp = MKImage(size: size)
-        self.localTemp = MKImage(size: Trackpad.size)
         self.image.clear()
         self.temp.clear()
     }
     
     public var image: MKImage
     public var temp: MKImage
-    public var localTemp: MKImage
+    
+    @Published public var strokes = [Stroke()]
+    
+    public struct Stroke {
+        public var points: [CGPoint] = []
+        public var color: Color = .purple
+        public var size: CGFloat = 10
+    }
     
     @Published public var id = UUID()
-    @Published public var tempID = UUID()
+    @Published public var strokesID = UUID()
     
     open var type: MKContextType {
         .raster
@@ -45,43 +50,49 @@ open class MKRasterContext: MKContext {
         image.size
     }
     
-    public var previousPoint: CGPoint?
-    
     public func draw(from fromPoint: CGPoint,
                      to toPoint: CGPoint,
                      touchState: MKDrawingState = MKDrawingState(),
-                     brush: MKBrush = MKBrush(),
-                     local: Bool) {
+                     brush: MKBrush = MKBrush()) {
+        let color = brush.resolveColor(for: touchState)
+        let size = brush.resolveSize(for: touchState.pressure)
         
-//        var toPoint = toPoint
-//        
-//        if var previousPoint {
-//            toPoint = CGPoint()
-//            toPoint.x = previousPoint.x+(toPoint.x - previousPoint.x) * 0.3
-//            toPoint.y = previousPoint.y+(toPoint.y - previousPoint.y) * 0.3
-//        }
-//        previousPoint = fromPoint
-        
-        if local {
-            localTemp.draw(from: fromPoint, to: toPoint, touchState: touchState, brush: brush)
-        } else {
-            temp.draw(from: fromPoint, to: toPoint, touchState: touchState, brush: brush)
+        if strokes.last == nil || strokes.last?.color != color || strokes.last?.size != size {
+            if strokes.last?.points.count == 0 {
+                strokes.removeLast()
+            }
+            
+            strokes.append(Stroke(color: color, size: size))
         }
-        triggerTemp()
+        
+        if strokes.last?.points.count == 0 {
+            strokes[strokes.count-1].points.append(fromPoint)
+        }
+        
+        strokes[strokes.count-1].points.append(toPoint)
+        triggerStrokes()
     }
     
     public func commit(brush: MKBrush = MKBrush(),
-                       in rect: CGRect) {        
-        image.merge(with: temp, brush: brush)
-        image.merge(with: localTemp, brush: brush, in: rect)
-        
-        temp.clear()
-        localTemp.clear()
-        
-        previousPoint = nil
-        
-        trigger()
-        triggerTemp()
+                       in rect: CGRect) {
+        Task {
+            temp.clear()
+            
+            for stroke in strokes {
+                if stroke.points.count > 1 {
+                    for i in 1..<stroke.points.count {
+                        temp.draw(from: stroke.points[i-1],
+                                  to: stroke.points[i],
+                                  size: stroke.size,
+                                  color: stroke.color)
+                    }
+                }
+            }
+            
+            image.merge(with: temp, brush: brush)
+            strokes.removeAll()
+            trigger()
+        }
     }
     
     public func merge(with context: MKRasterContext,
@@ -92,18 +103,19 @@ open class MKRasterContext: MKContext {
     }
     
     public func clear() {
-        self.image.clear()
-        self.temp.clear()
+        image.clear()
+        temp.clear()
+        strokes.removeAll()
         trigger()
-        triggerTemp()
+        triggerStrokes()
     }
     
     public func trigger() {
         id = UUID()
     }
     
-    func triggerTemp() {
-        tempID = UUID()
+    func triggerStrokes() {
+        strokesID = UUID()
     }
     
     public func copy(with zone: NSZone? = nil) -> Any {
