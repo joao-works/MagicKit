@@ -18,18 +18,14 @@ open class MKRasterContext: MKContext {
     
     public init(image: MKImage) {
         self.image = image
-        self.temp = MKImage(size: image.size)
     }
     
     public init(size: CGSize) {
         self.image = MKImage(size: size)
-        self.temp = MKImage(size: size)
         self.image.clear()
-        self.temp.clear()
     }
     
     public var image: MKImage
-    public var temp: MKImage
     
     @Published public var strokes = [Stroke()]
     
@@ -54,30 +50,45 @@ open class MKRasterContext: MKContext {
                      to toPoint: CGPoint,
                      touchState: MKDrawingState = MKDrawingState(),
                      brush: MKBrush = MKBrush()) {
-        let color = brush.resolveColor(for: touchState)
-        let size = brush.resolveSize(for: touchState.pressure)
-        
-        if strokes.last == nil || strokes.last?.color != color || strokes.last?.size != size {
-            if strokes.last?.points.count == 0 {
-                strokes.removeLast()
+        if brush.type == .bucket {
+            image.fill(with: brush, touchState: touchState)
+            strokes.removeAll()
+            trigger()
+        } else {
+            let color = brush.resolveColor(for: touchState)
+            let size = brush.resolveSize(for: touchState.pressure)
+            
+            if strokes.last == nil || strokes.last?.color != color || strokes.last?.size != size {
+                if strokes.last?.points.count == 0 {
+                    strokes.removeLast()
+                }
+                
+                strokes.append(Stroke(color: color, size: size))
             }
             
-            strokes.append(Stroke(color: color, size: size))
+            let lastPoint = strokes.last?.points.last
+            
+            if strokes.last?.points.count == 0 {
+                strokes[strokes.count-1].points.append(fromPoint)
+            }
+            
+            var point = toPoint
+            if let lastPoint {
+                point = CGPoint(x: (fromPoint.x + lastPoint.x)/2,
+                                y: (fromPoint.y + lastPoint.y)/2)
+            }
+            
+            strokes[strokes.count-1].points.append(point)
+            triggerStrokes()
         }
-        
-        if strokes.last?.points.count == 0 {
-            strokes[strokes.count-1].points.append(fromPoint)
-        }
-        
-        strokes[strokes.count-1].points.append(toPoint)
-        triggerStrokes()
     }
     
     public func commit(brush: MKBrush = MKBrush(),
                        in rect: CGRect) {
         Task {
-            temp.clear()
+            let temp = MKImage(size: size)
             
+            temp.lockFocus()
             for stroke in strokes {
                 if stroke.points.count > 1 {
                     for i in 1..<stroke.points.count {
@@ -88,6 +99,7 @@ open class MKRasterContext: MKContext {
                     }
                 }
             }
+            temp.unlockFocus()
             
             image.merge(with: temp, brush: brush)
             strokes.removeAll()
@@ -104,7 +116,6 @@ open class MKRasterContext: MKContext {
     
     public func clear() {
         image.clear()
-        temp.clear()
         strokes.removeAll()
         trigger()
         triggerStrokes()
