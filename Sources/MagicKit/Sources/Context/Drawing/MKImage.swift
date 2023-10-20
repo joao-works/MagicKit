@@ -20,8 +20,6 @@ public class MKImage: NSImage, Identifiable, ObservableObject {
                      to toPoint: CGPoint,
                      size: CGFloat,
                      color: Color) {
-        self.lockFocus()
-        
         let transform = CGAffineTransform(translationX: 0, y: self.size.height)
         
         let path = NSBezierPath()
@@ -35,6 +33,23 @@ public class MKImage: NSImage, Identifiable, ObservableObject {
         NSColor(color).setStroke()
         
         path.stroke()
+    }
+    
+    public func fill(with brush: MKBrush, touchState: MKDrawingState) {
+        self.lockFocus()
+        
+        let rect = NSRect(origin: .zero, size: size)
+        
+        if brush.fillStyle == .gradient {
+            if let gradient = NSGradient(colors: brush.gradient.sortedStops.map(\.color.nativeColor)
+                .map { NSColor($0) } ) {
+                let path = NSBezierPath(rect: rect)
+                gradient.draw(in: path, angle: 270.0)
+            }
+        } else {
+            NSColor(brush.color.nativeColor.opacity(brush.opacity)).setFill()
+            rect.fill()
+        }
         
         self.unlockFocus()
     }
