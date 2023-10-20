@@ -9,8 +9,16 @@ import SwiftUI
 
 /// The configuration struct that styles brush strokes
 public struct MKBrush: Equatable {
-    public var color: MKColor
-    public var gradient: MKGradient
+    public var color: MKColor {
+        didSet {
+            fillStyle = .color
+        }
+    }
+    public var gradient: MKGradient {
+        didSet {
+            fillStyle = .gradient
+        }
+    }
     
     public var type: MKBrushTypes
     public var fillStyle: MKBrushFillStyles
@@ -22,11 +30,19 @@ public struct MKBrush: Equatable {
     
     public var opacity: CGFloat
     
+    public var displayColor: Color {
+        switch fillStyle {
+        case .color: return color.nativeColor
+        case .gradient: return gradient.color(at: 0)
+        }
+    }
+    
     public init(color: MKColor = MKColor(color: .purple),
                 gradient: MKGradient = MKGradient(colors: [MKColor(color: .purple), MKColor(color: .pink)]),
                 type: MKBrushTypes = .pencil,
                 fillStyle: MKBrushFillStyles = .color,
-                size: CGFloat = 10.0, sizeVariation: CGFloat = 10.0,
+                size: CGFloat = 10.0,
+                sizeVariation: CGFloat = 10.0,
                 sizeVariationEnabled: Bool = true,
                 opacity: CGFloat = 1.0) {
         self.color = color

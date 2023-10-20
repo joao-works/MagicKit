@@ -12,9 +12,11 @@ public enum MKBrushTypes: String, Codable {
         switch self {
         case .pencil: return "brush-type-pencil"
         case .eraser: return "brush-type-eraser"
+        case .bucket: return "brush-type-bucket"
         }
     }
     
     case pencil = "pencil"
     case eraser = "eraser"
+    case bucket = "bucket"
 }

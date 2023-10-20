@@ -12,7 +12,7 @@ public struct MKGradient: Codable, Hashable, Identifiable, Equatable {
     
     public init(name: String = "brush-style-gradient".localized(),
                 stops: [MKGradient.Stop],
-                scale: CGFloat = 125,
+                scale: CGFloat = 250,
                 style: MKGradientStyle = .interpolated) {
         self.name = name
         self.stops = stops
@@ -83,7 +83,7 @@ public struct MKGradient: Codable, Hashable, Identifiable, Equatable {
             return start.color.nativeColor
         }
         
-        return end?.color.nativeColor ?? .black
+        return end?.color.nativeColor ?? .primary
     }
         
     public func copy(name: String? = nil) -> MKGradient {
