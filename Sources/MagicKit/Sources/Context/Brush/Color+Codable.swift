@@ -2,7 +2,7 @@
 
 import SwiftUI
 
-#if os(iOS)
+#if os(iOS) || os(visionOS)
 import UIKit
 #elseif os(watchOS)
 import WatchKit
@@ -65,7 +65,7 @@ extension Color: Codable {
         try container.encode(colorComponents.blue, forKey: .blue)
     }
     
-    func interpolate(to end: Self, fraction: CGFloat) -> Self {
+    public func interpolate(to end: Self, fraction: CGFloat) -> Self {
         guard let startComponents = self.colorComponents else {
             return self
         }
@@ -81,4 +81,10 @@ extension Color: Codable {
         
         return .init(.displayP3, red: red, green: green, blue: blue, opacity: alpha)
     }
+    
+    #if os(macOS)
+    public static var textBackground = Color(.textBackgroundColor)
+    #else
+    public static var textBackground = Color(.tertiarySystemBackground)
+    #endif
 }

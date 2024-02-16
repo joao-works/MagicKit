@@ -89,8 +89,7 @@ public class MKImage: NSImage, Identifiable, ObservableObject {
         self.unlockFocus()
     }
 }
-#elseif os(iOS)
-
+#else
 import UIKit
 
 public class MKImage: UIImage, Identifiable, ObservableObject {
@@ -115,24 +114,112 @@ public class MKImage: UIImage, Identifiable, ObservableObject {
         self.init(cgImage: image!.cgImage!)
     }
     
-    
-    /// The draw method draws strokes to the image through point, state and brush parameters
-    public func draw(from fromPoint: CGPoint,
-                     to toPoint: CGPoint,
-                     touchState: MKDrawingState = MKDrawingState(),
-                     brush: MKBrush = MKBrush()) {
-    }
-    
-    public func merge(with image: UIImage, brush: MKBrush, in rect: CGRect? = nil) {
+    public convenience init(size: CGSize,
+                            from strokes: [MKRasterContext.Stroke]) async {
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let image = renderer.image { ctx in
+            for stroke in strokes {
+                if stroke.points.count > 1 {
+                    for i in 1..<stroke.points.count {
+                        MKImage.draw(from: stroke.points[i-1],
+                                     to: stroke.points[i],
+                                     size: stroke.size,
+                                     color: stroke.color,
+                                     context: ctx.cgContext)
+                    }
+                }
+            }
+        }
+         
+        print(image)
         
+        if let image = image.cgImage {
+            self.init(cgImage: image)
+        } else {
+            self.init()
+        }
     }
     
-//    public func stack(_ image: NSImage, operation: NSCompositingOperation = .sourceOver, opacity: CGFloat = 1.0) {
-//        image.draw(in: image.alignmentRect, from: image.alignmentRect, operation: operation, fraction: opacity)
-//    }
+    static public func draw(from fromPoint: CGPoint,
+                     to toPoint: CGPoint,
+                     size: CGFloat,
+                     color: Color,
+                            context: CGContext) {
+        context.setStrokeColor(UIColor.blue.cgColor)
+        context.setLineWidth(size)
+        context.setLineCap(.round)
+        context.setLineJoin(.round)
+        
+        var fromPoint = fromPoint
+        var toPoint = toPoint
+        
+        fromPoint.y = -fromPoint.y
+        toPoint.y = -toPoint.y
+        
+        context.addLines(between: [fromPoint, toPoint])
+        context.drawPath(using: .stroke)
+    }
     
-    public func clear() {
+    public func merge(with image: UIImage, brush: MKBrush, in rect: CGRect? = nil) -> MKImage {
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let image = renderer.image { ctx in
+            ctx.cgContext.draw(self.cgImage!, in: .init(origin: .zero, size: size))
+            ctx.cgContext.draw(image.cgImage!, in: .init(origin: .zero, size: size))
+        }
+        
+        return MKImage(cgImage: image.cgImage!)
+    }
+    
+    public func fill(with brush: MKBrush, touchState: MKDrawingState) -> MKImage {
+        lockFocus()
+        
+        guard let context = UIGraphicsGetCurrentContext() else { return self }
+        
+        context.translateBy(x: 0, y: self.size.height)
+        context.scaleBy(x: 1.0, y: -1.0)
+        
+        let rect = CGRect(origin: .zero, size: size)
+        
+        if brush.fillStyle == .gradient {
+            if let gradient = CGGradient(colorsSpace: nil,
+                                         colors: brush.gradient.sortedStops.map(\.color.nativeColor)
+                                            .map { $0.cgColor } as CFArray,
+                                         locations: brush.gradient.sortedStops.map(\.location) as [CGFloat]) {
+                let path = UIBezierPath(rect: rect)
+                context.saveGState()
+                path.addClip()
+                context.drawLinearGradient(gradient,
+                                           start: CGPoint(x: 0, y: rect.height),
+                                           end: CGPoint(x: 0, y: 0),
+                                           options: [])
+                context.restoreGState()
+            }
+        } else {
+            UIColor(brush.color.nativeColor.opacity(brush.opacity)).setFill()
+            context.fill(rect)
+        }
+        
+        return unlockFocus()
+    }
+    
+    public func lockFocus() {
+        UIGraphicsBeginImageContextWithOptions(self.size, false, 0.0)
+    }
+    
+    public func unlockFocus() -> MKImage {
+        guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return self }
+        UIGraphicsEndImageContext()
+        
+        return MKImage(cgImage: image.cgImage!)
+    }
+    
+    public func clear() -> MKImage {
+        return MKImage(size: self.size)
+    }
+    
+    public func stack(_ image: UIImage,
+                      in rect: CGRect? = nil,
+                      opacity: CGFloat = 1.0) {
     }
 }
-
 #endif

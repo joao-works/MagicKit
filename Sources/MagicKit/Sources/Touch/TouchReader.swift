@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-#if os(iOS)
+#if !os(macOS)
 public typealias NSEvent = UIEvent
 public typealias NSTouch = UITouch
 public typealias NSView = UIView
