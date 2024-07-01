@@ -85,13 +85,16 @@ open class MKRasterContext: MKContext {
     
     public func commit(brush: MKBrush = MKBrush(),
                        in rect: CGRect) {
-        Task {
+        Task { [weak self] in
             #if os(macOS)
-            await temp.lockFocus()
-            for stroke in strokes {
+            guard let self = self else { return }
+            let temp = MKImage(size: self.image.size)
+            temp.lockFocus()
+            
+            for stroke in self.strokes {
                 if stroke.points.count > 1 {
                     for i in 1..<stroke.points.count {
-                        await temp.draw(from: stroke.points[i-1],
+                        temp.draw(from: stroke.points[i-1],
                                   to: stroke.points[i],
                                   size: stroke.size,
                                   color: stroke.color)
@@ -99,8 +102,8 @@ open class MKRasterContext: MKContext {
                 }
             }
 
-            await temp.unlockFocus()
-            await image.merge(with: temp, brush: brush)
+            temp.unlockFocus()
+            image.merge(with: temp, brush: brush)
             #else
             let temp = await MKImage(size: image.size, from: strokes)
             await image = image.merge(with: temp, brush: brush)
@@ -125,7 +128,7 @@ open class MKRasterContext: MKContext {
     public func clear() {
         Task {
             #if os(macOS)
-            await image.clear()
+            image.clear()
             #else
             image = await image.clear()
             #endif

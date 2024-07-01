@@ -81,10 +81,4 @@ extension Color: Codable {
         
         return .init(.displayP3, red: red, green: green, blue: blue, opacity: alpha)
     }
-    
-    #if os(macOS)
-    public static var textBackground = Color(.textBackgroundColor)
-    #else
-    public static var textBackground = Color(.tertiarySystemBackground)
-    #endif
 }
