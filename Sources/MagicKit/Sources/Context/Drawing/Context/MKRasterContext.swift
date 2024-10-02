@@ -148,9 +148,11 @@ open class MKRasterContext: MKContext {
     }
     
     public func copy(with zone: NSZone? = nil) -> Any {
-        let image = image.copy() as! MKImage
-        let context = MKRasterContext(image: image)
-        return context
+        if let image = image.copy() as? MKImage {
+            let context = MKRasterContext(image: image)
+            return context
+        }
+        return self
     }
     
     public func clone() -> any MKContext {
