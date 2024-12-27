@@ -55,10 +55,12 @@ public class MKImage: NSImage {
     public func merge(with image: NSImage,
                       brush: MKBrush,
                       in rect: CGRect? = nil) {
+        self.lockFocus()
         stack(image,
               in: rect,
               operation: brush.type == .pencil ? .sourceOver : .destinationOut,
               opacity: brush.opacity)
+        self.unlockFocus()
     }
     
     public func stack(_ image: NSImage,
@@ -73,12 +75,10 @@ public class MKImage: NSImage {
                             height: rect.height)
         }
         
-        self.lockFocus()
         image.draw(in: newRect,
                    from: image.alignmentRect,
                    operation: operation,
                    fraction: opacity)
-        self.unlockFocus()
     }
     
     public func clear() {
